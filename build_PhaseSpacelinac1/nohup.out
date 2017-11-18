@@ -1,0 +1,251 @@
+
+*************************************************************
+ Geant4 version Name: geant4-10-01-patch-02    (19-June-2015)
+                      Copyright : Geant4 Collaboration
+                      Reference : NIM A 506 (2003), 250-303
+                            WWW : http://cern.ch/geant4
+*************************************************************
+
+
+
+	DICOM running in serial mode
+
+
+<<< Geant4 Physics List simulation engine: G4GenericPhysicsList
+
+ The name of the Elekta source is an input of the UImessenger
+ DicomPrimaryGeneratorAction is opening the gantry file GantryData.out
+generating particles !!!
+ phsp size = 4174229829
+Total number of particles in file ../../ELEKTA_PRECISE_6mv_part1.IAEAphsp = 126491813
+Number of original histories in header file ../../ELEKTA_PRECISE_6mv_part1.IAEAphsp = 170000000
+The number of Extra Floats is 0 and the number of Extra Ints is 2
+ DicomDetectorConstruction:: opening the gantry file GantryData.out
+gantry projection angle = 0 degrees 
+Aperture Diaphragm Z1 = 15   cm  
+Aperture Diaphragm Z2 = 15   cm  
+output dose file = output.dat
+IAEA file = ELEKTA_PRECISE_6mv_part1
+MLC Left Position file  = MLC_left2.dat
+MLC Right Position file  = MLC_right2.dat
+
+ *********constructing the phase Space********
+ 
+Visualization Manager instantiating with verbosity "warnings (3)"...
+Visualization Manager initialising...
+Registering graphics systems...
+
+You have successfully registered the following graphics systems.
+Current available graphics systems are:
+  ASCIITree (ATree)
+  DAWNFILE (DAWNFILE)
+  G4HepRep (HepRepXML)
+  G4HepRepFile (HepRepFile)
+  OpenGLImmediateQt (OGLI, OGLIQt)
+  OpenGLImmediateX (OGLIX, OGLI_FALLBACK, OGLIQt_FALLBACK)
+  OpenGLStoredQt (OGL, OGLS, OGLSQt)
+  OpenGLStoredX (OGLSX, OGL_FALLBACK, OGLS_FALLBACK, OGLSQt_FALLBACK)
+  RayTracer (RayTracer)
+  RayTracerX (RayTracerX)
+  VRML1FILE (VRML1FILE)
+  VRML2FILE (VRML2FILE)
+  gMocrenFile (gMocrenFile)
+
+Registering model factories...
+
+You have successfully registered the following model factories.
+Registered model factories:
+  generic
+  drawByCharge
+  drawByParticleID
+  drawByOriginVolume
+  drawByAttribute
+
+Registered filter factories:
+  chargeFilter
+  particleFilter
+  originVolumeFilter
+  attributeFilter
+
+You have successfully registered the following user vis actions.
+Run Duration User Vis Actions: none
+End of Event User Vis Actions: none
+End of Run User Vis Actions: none
+
+Some /vis commands (optionally) take a string to specify colour.
+Available colours:
+  black, blue, brown, cyan, gray, green, grey, magenta, red, white, yellow
+
+/tracking/verbose 0
+/run/verbose 1
+/event/verbose 0
+/run/initialize
+/linacCommands/DefineParameters 0 15 15 output.dat ELEKTA_PRECISE_6mv_part1 MLC_left2.dat MLC_right2.dat
+/run/beamOn 126491813
+
+========= Table of registered couples ==============================
+
+Index : 0     used in the geometry : Yes
+ Material : Air
+ Range cuts        :  gamma  700 um     e-  700 um     e+  700 um  proton 700 um 
+ Energy thresholds :  gamma  990 eV     e-  990 eV     e+  990 eV  proton 70 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 1     used in the geometry : Yes
+ Material : G4_Galactic
+ Range cuts        :  gamma  700 um     e-  700 um     e+  700 um  proton 700 um 
+ Energy thresholds :  gamma  990 eV     e-  990 eV     e+  990 eV  proton 70 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+====================================================================
+
+### Run 0 starts.
+### Run 0 start.
+EV: 0
+EV: 1000000
+EV: 2000000
+EV: 3000000
+EV: 4000000
+EV: 5000000
+EV: 6000000
+EV: 7000000
+EV: 8000000
+EV: 9000000
+EV: 10000000
+EV: 11000000
+EV: 12000000
+EV: 13000000
+EV: 14000000
+EV: 15000000
+EV: 16000000
+EV: 17000000
+EV: 18000000
+EV: 19000000
+EV: 20000000
+EV: 21000000
+EV: 22000000
+EV: 23000000
+EV: 24000000
+EV: 25000000
+EV: 26000000
+EV: 27000000
+EV: 28000000
+EV: 29000000
+EV: 30000000
+EV: 31000000
+EV: 32000000
+EV: 33000000
+EV: 34000000
+EV: 35000000
+EV: 36000000
+EV: 37000000
+EV: 38000000
+EV: 39000000
+EV: 40000000
+EV: 41000000
+EV: 42000000
+EV: 43000000
+EV: 44000000
+EV: 45000000
+EV: 46000000
+EV: 47000000
+EV: 48000000
+EV: 49000000
+EV: 50000000
+EV: 51000000
+EV: 52000000
+EV: 53000000
+EV: 54000000
+EV: 55000000
+EV: 56000000
+EV: 57000000
+EV: 58000000
+EV: 59000000
+EV: 60000000
+EV: 61000000
+EV: 62000000
+EV: 63000000
+EV: 64000000
+EV: 65000000
+EV: 66000000
+EV: 67000000
+EV: 68000000
+EV: 69000000
+EV: 70000000
+EV: 71000000
+EV: 72000000
+EV: 73000000
+EV: 74000000
+EV: 75000000
+EV: 76000000
+EV: 77000000
+EV: 78000000
+EV: 79000000
+EV: 80000000
+EV: 81000000
+EV: 82000000
+EV: 83000000
+EV: 84000000
+EV: 85000000
+EV: 86000000
+EV: 87000000
+EV: 88000000
+EV: 89000000
+EV: 90000000
+EV: 91000000
+EV: 92000000
+EV: 93000000
+EV: 94000000
+EV: 95000000
+EV: 96000000
+EV: 97000000
+EV: 98000000
+EV: 99000000
+EV: 100000000
+EV: 101000000
+EV: 102000000
+EV: 103000000
+EV: 104000000
+EV: 105000000
+EV: 106000000
+EV: 107000000
+EV: 108000000
+EV: 109000000
+EV: 110000000
+EV: 111000000
+EV: 112000000
+EV: 113000000
+EV: 114000000
+EV: 115000000
+EV: 116000000
+EV: 117000000
+EV: 118000000
+EV: 119000000
+EV: 120000000
+EV: 121000000
+EV: 122000000
+EV: 123000000
+EV: 124000000
+EV: 125000000
+EV: 126000000
+ Run terminated.
+Run Summary
+  Number of events processed : 126491813
+  User=7944.66s Real=44084.1s Sys=3947.21s
+### Run Summary - Number of events : 0
+
+############################################################
+ Energy deposit at:
+    	|- WaterPhantomTarget = 0 MeV
+############################################################
+G4 kernel has come to Quit state.
+File ../../ELEKTA_PRECISE_6mv_part1.IAEAphsp closed successfully!
+================== Deleting memory pools ===================
+Number of memory pools allocated: 13; of which, static: 0
+Dynamic pools deleted: 13 / Total memory freed: 0.069 Mb
+============================================================
+RunManagerKernel is deleted. Good bye :)
+Graphics systems deleted.
+Visualization Manager deleting...

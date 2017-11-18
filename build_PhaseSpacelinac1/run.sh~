@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./DetectorLinac run.mac | tee 1_info1403.txt

@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>DetectorLinac-Debug@build_PhaseSpacelinac1</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.cdt.make.core.makeBuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableCleanBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.append_environment</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.stopOnError</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enabledIncrementalBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.command</key>
+					<value>/usr/bin/make</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.contents</key>
+					<value>org.eclipse.cdt.make.core.activeConfigSettings</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.inc</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.arguments</key>
+					<value>-j8</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildLocation</key>
+					<value>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/build_PhaseSpacelinac1</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.environment</key>
+					<value>VERBOSE=1|CMAKE_NO_VERBOSE=1|</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableFullBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.auto</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.clean</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.fullBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildArguments</key>
+					<value></value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.location</key>
+					<value>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/build_PhaseSpacelinac1</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.core.errorOutputParser</key>
+					<value>org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.make.core.ScannerConfigBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.make.core.makeNature</nature>
+		<nature>org.eclipse.cdt.make.core.ScannerConfigNature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>[Source directory]</name>
+			<type>2</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac</location>
+		</link>
+		<link>
+			<name>[Subprojects]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Subprojects]/DetectorLinac</name>
+			<type>2</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac</location>
+		</link>
+		<link>
+			<name>[Targets]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/DetectorLinac.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/DetectorLinac.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/iaea_header.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/iaea_header.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/G4IAEAphspWriter.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/G4IAEAphspWriter.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/DicomPrimaryGeneratorAction.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/DicomPrimaryGeneratorAction.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/SteppingAction.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/SteppingAction.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/utilities.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/utilities.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/DicomLinac.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/DicomLinac.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/SteppingVerbose.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/SteppingVerbose.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/iaea_record.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/iaea_record.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/G4IAEAphspReader.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/G4IAEAphspReader.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/G4ScoringManager.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/G4ScoringManager.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/DicomDetectorConstruction.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/DicomDetectorConstruction.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/Run.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/Run.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/DicomActionInitialization.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/DicomActionInitialization.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/iaea_phsp.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/iaea_phsp.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/RunAction.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/RunAction.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/TrackingAction.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/TrackingAction.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Source Files/DicomEventAction.cc</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/src/DicomEventAction.cc</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/SteppingVerbose.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/SteppingVerbose.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/G4IAEAphspWriter.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/G4IAEAphspWriter.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/RunAction.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/RunAction.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/TrackingAction.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/TrackingAction.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/DicomLinac.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/DicomLinac.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/DicomPrimaryGeneratorAction.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/DicomPrimaryGeneratorAction.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/Run.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/Run.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/DicomDetectorConstruction.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/DicomDetectorConstruction.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/DicomActionInitialization.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/DicomActionInitialization.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/G4IAEAphspReader.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/G4IAEAphspReader.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/SteppingAction.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/SteppingAction.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/DicomRegularDetectorConstruction.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/DicomRegularDetectorConstruction.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/G4ScoringManager.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/G4ScoringManager.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Header Files/DicomEventAction.hh</name>
+			<type>1</type>
+			<location>/project/med3/Juliana.Martins/Reserva/PhaseSpace_Z/DetectorLinac/include/DicomEventAction.hh</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] DetectorLinac/Object Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>

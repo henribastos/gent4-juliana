@@ -1,0 +1,23 @@
+
+#########################
+# Set of the verboses 
+#
+/control/verbose 1
+/tracking/verbose 0
+/run/verbose 1
+/event/verbose 0
+
+
+##########################
+
+
+##########################
+# Initialisation procedure
+#
+#/geometry/textInput/verbose 3
+
+/run/initialize
+
+/linacCommands/DefineParameters 0 15 15  output.dat  ELEKTA_PRECISE_6mv_part1  MLC_left2.dat  MLC_right2.dat
+
+/run/beamOn 126491813

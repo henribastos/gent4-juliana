@@ -1,0 +1,21 @@
+
+#########################
+# Set of the verboses 
+#
+/control/verbose 1
+/tracking/verbose 0
+/run/verbose 1
+/event/verbose 0
+
+
+##########################
+
+
+##########################
+# Initialisation procedure
+#
+#/geometry/textInput/verbose 3
+
+/run/initialize
+
+/run/beamOn 100

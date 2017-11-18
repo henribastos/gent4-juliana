@@ -1,0 +1,645 @@
+//
+// ********************************************************************
+// * License and Disclaimer                                           *
+// *                                                                  *
+// * The  Geant4 software  is  copyright of the Copyright Holders  of *
+// * the Geant4 Collaboration.  It is provided  under  the terms  and *
+// * conditions of the Geant4 Software License,  included in the file *
+// * LICENSE and available at  http://cern.ch/geant4/license .  These *
+// * include a list of copyright holders.                             *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.  Please see the license in the file  LICENSE  and URL above *
+// * for the full disclaimer and the limitation of liability.         *
+// *                                                                  *
+// * This  code  implementation is the result of  the  scientific and *
+// * technical work of the GEANT4 collaboration.                      *
+// * By using,  copying,  modifying or  distributing the software (or *
+// * any work based  on the software)  you  agree  to acknowledge its *
+// * use  in  resulting  scientific  publications,  and indicate your *
+// * acceptance of all terms of the Geant4 Software license.          *
+// ********************************************************************
+//
+// $Id: DicomDetectorConstruction.cc 84839 2014-10-21 13:44:55Z gcosmo $
+//
+/// \file  medical/DICOM/src/DicomDetectorConstruction.cc
+/// \brief Implementation of the DicomDetectorConstruction class
+//
+
+#include "DicomDetectorConstruction.hh"
+#include "globals.hh"
+
+#include "G4Box.hh"
+#include "G4Tubs.hh"
+#include "G4LogicalVolume.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4PVPlacement.hh"
+#include "G4Material.hh"
+#include "G4Element.hh"
+#include "G4UIcommand.hh"
+#include "DicomLinac.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4NistManager.hh"
+#include "RunAction.hh"
+#include "Run.hh"
+#include "G4VisAttributes.hh"
+#include "G4IntersectionSolid.hh"
+#include "G4Transform3D.hh"
+#include "G4PSEnergyDeposit.hh"
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+DicomDetectorConstruction::DicomDetectorConstruction():
+  Vacuum(0),
+  water(0),
+  fAir(0),
+  WAlloy(0),
+  fWorld_solid(0),
+  fWorld_logic(0),
+  fWorld_phys(0)
+  
+{
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+DicomDetectorConstruction::~DicomDetectorConstruction()
+{
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+G4VPhysicalVolume* DicomDetectorConstruction::Construct()
+{
+  InitialisationOfMaterials();
+  
+  //----- Build world
+  G4double worldXDimension = 1.0*m;
+  G4double worldYDimension = 1.0*m;
+  G4double worldZDimension = 1.0*m;
+  
+  fWorld_solid = new G4Box( "WorldSolid",
+			    worldXDimension,
+			    worldYDimension,
+			    worldZDimension );
+  
+  fWorld_logic = new G4LogicalVolume( fWorld_solid,
+				      fAir,
+				      "WorldLogical",
+				      0, 0, 0 );
+  
+  fWorld_phys = new G4PVPlacement( 0,
+				   G4ThreeVector(0,0,0),
+				   "World",
+				   fWorld_logic,
+				   0,
+				   false,
+				   0 );
+  
+  // CubicDetector();
+  ReadLinacDataFile();
+  PhaseSpace();
+  return fWorld_phys;
+}
+
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void DicomDetectorConstruction::InitialisationOfMaterials()
+{
+  // Creating elements :
+  G4double z, a;
+  G4String name, symbol;
+  
+  
+  G4Element* elN = new G4Element( name = "Nitrogen",
+				  symbol = "N",
+				  z = 7.0, a = 14.007 * g/mole );
+  G4Element* elO = new G4Element( name = "Oxygen",
+				  symbol = "O",
+				  z = 8.0, a = 16.00  * g/mole );
+  G4Element* elH = new G4Element( name = "Hydrogen",
+    				  symbol = "H",
+    				  z = 1.0, a = 1.008  * g/mole );
+  
+  // Creating Materials :
+  G4int numberofElements;
+  
+  // Air
+  fAir = new G4Material( "Air",
+			 1.290*mg/cm3,
+			 numberofElements = 2 );
+  fAir->AddElement(elN, 0.7);
+  fAir->AddElement(elO, 0.3);
+  
+  
+  Vacuum=G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+  
+  //Diaphragm and MLC composition
+  // Define W Alloy
+  
+  G4Material* W =G4NistManager::Instance()->FindOrBuildMaterial("G4_W");
+  G4Material* Fe = G4NistManager::Instance()->FindOrBuildMaterial("G4_Fe");
+  G4Material* Ni=G4NistManager::Instance()->FindOrBuildMaterial("G4_Ni");
+  
+  
+  WAlloy = new G4Material("WAlloy", 18.0*g/cm3, 3);
+  WAlloy->AddMaterial(W, 0.9500);
+  WAlloy->AddMaterial(Fe, 0.0125);
+  WAlloy->AddMaterial(Ni, 0.0375);
+  
+  // Water
+  water = new G4Material( "Water",1.0*g/cm3, 2 );
+  water->AddElement(elH,0.112);
+  water->AddElement(elO,0.888);
+ 
+}
+
+
+void DicomDetectorConstruction::ReadLinacDataFile()
+{
+  G4String filename = "GantryData.out";
+  
+#ifdef G4VERBOSE
+  G4cout << " DicomDetectorConstruction:: opening the gantry file "
+	 << filename << G4endl;
+#endif
+  std::ifstream finR(filename.c_str(), std::ios_base::in);
+  if( !finR.is_open() ) {
+    G4Exception("DicomDetectorConstruction::ReadLinacDataFile",
+		"",
+		FatalException,
+		G4String("File not found " + filename).c_str());
+  }
+  G4double angle=0.0;
+  G4double ApertZ1=0.0;
+  G4double ApertZ2=0.0;
+  G4String outp, iaea, filenameMLC,filenameMLCR ;
+  finR >> angle>>ApertZ1>>ApertZ2>>outp>>iaea>>filenameMLC>>filenameMLCR ;
+  finR.close();
+  G4cout << "gantry projection angle = "<<angle<< " degrees " << G4endl;
+  G4cout << "Aperture Diaphragm Z1 = "<<ApertZ1<<"   cm  "<<G4endl;
+  G4cout << "Aperture Diaphragm Z2 = "<<ApertZ2<<"   cm  "<<G4endl;
+  G4cout << "output dose file = "<<outp<<G4endl;
+  G4cout << "IAEA file = "<<iaea<<G4endl;
+  G4cout << "MLC Left Position file  = "<<filenameMLC<<G4endl;
+  G4cout << "MLC Right Position file  = "<<filenameMLCR<<G4endl;
+  angle*=pi/180;
+  //ConstructJaws(angle, ApertZ1, ApertZ2);
+  //ConstructMLC(angle,filenameMLC,filenameMLCR );
+}
+
+void DicomDetectorConstruction::ConstructMLC(const G4double angle,const G4String filenameMLC, const G4String filenameMLCR)
+{
+  G4double CurvatureLeaf=170.0*mm;  //Curvature multileaf
+  //G4double LeafHalfWidhtUp=0.735*mm;  //Half width multileaf
+  G4double LeafHalfWidhtDown=0.955*mm;  //Half width multileaf
+  G4double LeafHalfHigh=45.0*mm;  //Half high multileaf
+  G4double LeafHalfLength=77.5*mm;  //Half length multileaf
+  G4double HalfSpaceBetwLeaves =0.045*mm;
+  G4int NoLeaves = 80;
+  G4int MLCNoLeaves = 160;
+  std::vector<G4double> PosLeft;
+  std::vector<G4double> PosRight;
+  
+  //THE LEFT-POSITION FILE
+  std::ifstream finDF (filenameMLC.c_str());
+  if (finDF.good() != 1)
+    {
+      G4String descript = "Problem reading data file: "+filenameMLC;
+      G4Exception ("DicomMLCParameterisation::DicomMLCParameterisationRight",
+		   "",
+		   FatalException,
+		   descript);
+      
+    }
+  
+  // Aperture at the ISOCENTER
+  G4double b = 0.0;  //left
+  G4double c = 0.0;  //right
+  
+  //Reading from file and storing in a vector
+  for (G4int j = 0; j<NoLeaves; j++)
+    {
+      finDF >> b;
+    //  G4cout << "Left Leaf = " << j << " aperture (ISO) = " << b << G4endl;
+      PosLeft.push_back(b);
+    }
+  finDF.close();
+  
+  //THE RIGHT-POSITION FILE
+  std::ifstream finDF2(filenameMLCR.c_str());
+  if (finDF2.good() !=1)
+    {
+      G4String descript = "Problem reading data file: "+filenameMLCR;
+      G4Exception("DicomMLCParameterisation::DicomMLCParameterisationRight",
+		  "",
+		  FatalException,
+		  descript);
+    }
+  
+  for (G4int k = 0; k<NoLeaves; k++)
+    {
+      finDF2 >> c;
+   //   G4cout << "Right Leaf = " << k << " aperture (ISO) = " << c << G4endl;
+      PosRight.push_back(c);
+    }
+  finDF2.close();
+  
+  
+  //Constant POSITION OF MLC in y direction
+  G4double	JX_Pos_y= 643.2*mm;
+  //Tilt of the MLC depends of the gantry angle
+  G4RotationMatrix* MLCRot = new G4RotationMatrix;
+  MLCRot->rotateZ(-angle); // rotation of the gantry
+  
+  //Size of the MLC mother
+  G4double MLCHalf_Z=NoLeaves*(LeafHalfWidhtDown+HalfSpaceBetwLeaves);  //Half width multileaf
+  G4double MLCHalf_Y=LeafHalfHigh;  //Half high multileaf
+  G4double MLCHalf_X=5.0*LeafHalfLength;  //Half length multileaf, bit bigger
+  
+  //Define a box as a mother of the MLC (one Mother for both left and right)**************************************************************************
+  G4Box* MLCBox = new G4Box("MLCBox", MLCHalf_X,MLCHalf_Y, MLCHalf_Z);
+  
+  G4LogicalVolume* MLCBoxLogical = new G4LogicalVolume(MLCBox,        // Solid
+						       Vacuum,   // Material
+						       "MLCBox_Logical"); // Name
+  
+  
+  new G4PVPlacement(MLCRot,            // Rotation matrix pointer
+		    G4ThreeVector(JX_Pos_y*sin(-angle),JX_Pos_y*cos(-angle),0.),    // Translation vector
+		    MLCBoxLogical,                    // Logical volume
+		    "MLCMother_Physical",                // Name
+		    fWorld_logic,                   // Mother volume
+		    false,                            // Unused boolean
+		    0,                                // copy number
+		    true);                           // overlapping
+  
+  // MLCBoxLogical->SetVisAttributes(G4VisAttributes::Invisible);
+  
+  
+  
+  // *****************************************************************************************
+  //Constructing a leaf
+  G4cout << "constructing a leaf left "<<G4endl;
+  //a leaf is the intersection of a box and a translated cylinder:
+  G4ThreeVector zTransL(92.5*mm, -7.5*mm,0);
+  
+  //Cylinder
+  G4Tubs* Cyl = new G4Tubs("BigCylinder", 0, CurvatureLeaf, LeafHalfWidhtDown, 0,twopi);
+  
+  //Only to visualize
+  /*  G4LogicalVolume* CylLogical =new G4LogicalVolume(Cyl, WAlloy, "CylLogical"); // Name
+      new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),CylLogical,"CylPhysical",fWorld_logic,false,0);
+      G4VisAttributes* CylColor = new G4VisAttributes(G4Colour::Blue());
+      CylColor->SetVisibility(true);
+      CylColor->SetForceSolid(true);
+      CylLogical->SetVisAttributes(CylColor); */
+  
+  //Box
+  G4Box* tpzd = new G4Box("Trapezoid",LeafHalfLength,LeafHalfHigh, LeafHalfWidhtDown);
+  
+  //Only to visualize
+  /* G4LogicalVolume* TrapLogical = new G4LogicalVolume(tpzd,WAlloy,"TrapLogical");
+     new G4PVPlacement(0,G4ThreeVector(0.,300.,0.),TrapLogical,"TrapPhysical",fWorld_logic,false,0);
+     
+     G4VisAttributes* TrapColor = new G4VisAttributes(G4Colour::Red());
+     TrapColor->SetVisibility(true);
+     TrapColor->SetForceSolid(true);
+     TrapLogical->SetVisAttributes(TrapColor); */
+  
+  // Boolean operations
+  G4IntersectionSolid* MLC_left = new G4IntersectionSolid("MultiLeafL",  Cyl, tpzd, 0, zTransL );
+  
+  //Construction of 160 leaves
+  
+  G4VPhysicalVolume* MLCVoxel_phys;
+  G4LogicalVolume* MLCcellLogical[MLCNoLeaves];
+  
+  G4double theta_i=0.0;
+  G4int jj=0;
+  G4double JX_Pos_x=0.0;
+  G4double dZ=LeafHalfWidhtDown+HalfSpaceBetwLeaves;
+  G4double posZ=0.0;
+  
+  for (G4int l = 0; l <MLCNoLeaves; l++)
+    {
+      MLCcellLogical[l]= new G4LogicalVolume (MLC_left,        //solid
+					      WAlloy,          //Material
+					      "MLCLOGICAL");   // Name
+      
+      G4VisAttributes* Colour = new G4VisAttributes(G4Colour(1.0,0.61,0.0,1));
+      Colour->SetVisibility(true);
+      Colour->SetForceSolid(true);
+      MLCcellLogical[l]->SetVisAttributes(Colour);
+      
+      if (l<NoLeaves)
+	{
+	  theta_i=0.0;
+	  JX_Pos_x = -170.0+PosLeft[l]*0.01*(1000.0-643.2);
+	  posZ= dZ + l*2*dZ - MLCHalf_Z;
+	}
+      
+      else
+	{
+	  theta_i = 180.0*deg;
+	  jj = l-80;
+	  JX_Pos_x= 170.0+PosRight[jj]*0.01*(1000.0-643.2);
+	  posZ= dZ + jj*2*dZ - MLCHalf_Z;
+	}
+      
+      G4RotationMatrix* rm2 = new G4RotationMatrix();
+      rm2->rotateY(theta_i);
+      
+   //   G4cout <<"leaf = "<< l <<"   posX (mm) = "<<JX_Pos_x<< "     posZ (mm) = "<<posZ<<"     rot (rad) = "<<theta_i<<G4endl;
+      
+      MLCVoxel_phys = new G4PVPlacement (rm2,     //rotation matrix
+					 G4ThreeVector (JX_Pos_x*mm, 7.5*mm, posZ*mm),  // Translation
+					 MLCcellLogical[l],               //Logical Volume
+					 "Voxel_Physicsl",             //name
+					 MLCBoxLogical,                //Mother Volume
+					 false,                        //unused boolean
+					 l,                            //copy number
+					 false);                        //check overlap
+      
+    }
+}
+
+
+void DicomDetectorConstruction::ConstructJaws(const G4double angle, const
+					      G4double Aperture_Z1, const G4double Aperture_Z2 )
+{
+  //Defining the position of the diaphragm ***************************************************
+  
+  G4double JZ_Pos_y= 529.5*mm;     //Constant POSITION OF DIAPRAGMS in y direction
+  
+  //Jaws dimension
+  G4double DiapHalfLength=100.0*mm;  //Half length diaphragms  (user defined)
+  G4double DiapHalfHigh=38.5*mm;  //Half high diaphragms
+  G4double DiapHalfWidth=100.0*mm;  //Half width diaphragms (user defined)
+  G4double CurvatureDiap=135.0*mm;  //Curvature Diaphragm
+  
+  //The position of Jaws depends of the aperture from -Z1 to +Z1
+  G4double Z1=10*Aperture_Z1*mm;// size -Z
+  G4double Z2=10*Aperture_Z2*mm;// size +Z
+  
+  G4double JZ_Pos_z1=Z1*0.001*(1000-JZ_Pos_y)+DiapHalfLength; //variable position of the diaphragm at right (- Z)
+  G4double JZ_Pos_z2=Z2*0.001*(1000-JZ_Pos_y)+DiapHalfLength; //variable position of the diaphragm at left (+ Z)
+  
+  //Position of the Jaws depends of the gantry angle
+  G4RotationMatrix* JawsRot = new G4RotationMatrix;
+  JawsRot->rotateZ(-angle);
+  
+  //Define a box as a mother of the diaphragm*********************************************
+  
+  G4Box* DiaBox = new G4Box("DiaBox", 100*mm, DiapHalfHigh, 600*mm);
+  G4LogicalVolume* DiaBoxLogical = new G4LogicalVolume(DiaBox,        // Solid
+						       Vacuum,   // Material
+						       "DiaLogical"); // Name
+  
+  
+  //Position of the diaphragm depends of the gantry angle
+  new G4PVPlacement(JawsRot,                               // Rotation matrix pointer
+		    G4ThreeVector(JZ_Pos_y*sin(-angle),JZ_Pos_y*cos(-angle),0.),// Translation vector
+		    DiaBoxLogical,                    // Logical volume
+		    "Dia_Physical",                // Name
+		    fWorld_logic,                   // Mother volume
+		    false,                            // Unused boolean
+		    0);                               // Copy number*/
+  
+  
+  // DiaBoxLogical->SetVisAttributes(G4VisAttributes::Invisible);
+  
+  //Diaphragm is the intersection of a box and a translated & rotated cylinder:****************************************************
+  G4ThreeVector zTransD(0, 3.5*mm, 35*mm);
+  
+  //Cylinder
+  G4Tubs* CylD = new G4Tubs("BigCylinderD", 0, CurvatureDiap,
+			    DiapHalfWidth, 0,twopi);
+  //Only to visualize
+  /*
+    G4LogicalVolume* CylDLogical =new G4LogicalVolume(CylD, WAlloy,
+    "CylDLogical"); // Name
+    new
+    G4PVPlacement(yRot,zTransD,CylDLogical,"CylDPhysical",fWorld_logic,false,0);
+    CylDLogical->SetVisAttributes(CylColor);
+  */
+  
+  //Box
+  G4Box* DiaPBox = new G4Box("DiaPBox", DiapHalfLength, DiapHalfHigh, DiapHalfWidth);
+  
+  //Only to visualize
+  /*
+    G4LogicalVolume* DBoxLogical = new
+    G4LogicalVolume(DiaPBox,WAlloy,"CylLogical");
+    new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),DBoxLogical,"DBoxPhysical",fWorld_logic,false,0);
+    DBoxLogical->SetVisAttributes(TrapColor);
+  */
+  
+  // Boolean operations *****************************************************************************************
+  //First rotate the cylinder
+  G4RotationMatrix* yRotCyl = new G4RotationMatrix;
+  yRotCyl->rotateY(0.5*pi);
+  G4IntersectionSolid* Diap = new G4IntersectionSolid("Diap", DiaPBox,
+						      CylD, yRotCyl,zTransD ); // opeations are always on the last solid
+  
+  G4LogicalVolume* DiapLogical = new G4LogicalVolume(Diap,        // Solid
+						     WAlloy,   // Material
+						     "DiapLogical"); // Name
+  
+  //The new Diaphragm is located according to the filed size:****************************************************************
+  
+  //The Diaphragm at -z
+  //include rotation matrix
+  G4RotationMatrix* rmatrixDiap = new G4RotationMatrix();
+  rmatrixDiap->rotateY(pi);
+  new G4PVPlacement(rmatrixDiap,             //Rotation matrix pointer
+                    G4ThreeVector(0.,0.,-JZ_Pos_z1),    // Translation vector
+                    DiapLogical,                    // Logical volume
+                    "DiapPhysical",                // Name
+                    DiaBoxLogical,                   // Mother volume
+                    false,                            // Unused boolean
+                    0);                               // Copy number
+  
+  G4VisAttributes* Colour = new G4VisAttributes(G4Colour(1.0,0.61,0.0,1));
+  Colour->SetVisibility(true);
+  Colour->SetForceSolid(true);
+  DiapLogical->SetVisAttributes(Colour);
+  
+  //The diaphragm at z
+  new G4PVPlacement(0,                   // Rotation matrix pointer
+                    G4ThreeVector(0.,0.,JZ_Pos_z2),    // Translation vector
+                    DiapLogical,                    // Logical volume
+                    "DiapPhysical",                // Name
+                    DiaBoxLogical,                   // Mother volume
+                    false,                            // Unused boolean
+                    0);                               // Copy number
+  
+  // DIAFRAGM -  ORANGE
+  G4VisAttributes* JawZColour = new
+    G4VisAttributes(G4Colour(0.83,0.69,0.21,1));
+  JawZColour->SetVisibility(true);
+  JawZColour->SetForceSolid(true);
+  DiapLogical->SetVisAttributes(JawZColour);
+  
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+#include "G4SDManager.hh"
+#include "G4MultiFunctionalDetector.hh"
+#include "G4PSDoseDeposit.hh"
+#include "G4PSDoseDeposit3D.hh"
+
+
+void DicomDetectorConstruction::CubicDetector(){
+  
+  // Voxelized detector in X, Y, Z
+#define N 4  
+#define S 2
+#define Q 4
+  
+  G4double a      = 200.*mm;
+  G4double b      = 100.*mm;
+  G4double c      = 200.*mm;
+  G4double dx     = a/N;
+  G4double dy     = b/S;
+  G4double dz     = c/Q;
+  G4int NVoxels=N*S*Q;
+  
+  G4Box* Voxel = new G4Box("Cell_Solid",dx/2,dy/2,dz/2);
+  
+  G4float x_i=0.0;
+  G4float y_i=0.0;
+  G4float z_i=0.0;
+  
+  G4LogicalVolume* cellLogical[NVoxels];
+  G4VPhysicalVolume* Voxel_phys;
+  ////////////////////////////////////////////////////////////////////////
+  // Defining sensitive detector
+  // Create a new MultiFunctional Detector
+  G4MultiFunctionalDetector* MFDet =
+    new G4MultiFunctionalDetector("phantomSD");
+  
+  G4VPrimitiveScorer* dosedep =
+    new G4PSDoseDeposit("DoseDeposit");
+  MFDet->RegisterPrimitive(dosedep);
+  
+  //File to write the voxels position
+  std::ofstream fout;
+  G4String PositionFile = "Position.dat";
+  fout.open(PositionFile);
+  G4cout << " opened file " << PositionFile << " for position output" << G4endl;
+  
+  //Position of the voxels
+  std::vector<G4double> PosX;
+  std::vector<G4double> PosY;
+  std::vector<G4double> PosZ;
+  
+  for (G4int o=1;o<=Q;o++){
+    for (G4int p=1;p<=N;p++){
+      for (G4int r=1;r<=S;r++){
+	x_i = (-a/2)+(p-1)*dx+dx/2;
+	y_i=(-b/2)+(r-1)*dy+dy/2;
+	z_i=(-c/2)+(o-1)*dz+dz/2;
+	G4cout<<"x="<<x_i<<"     y="<<y_i<<"   z="<<z_i<<G4endl;
+	PosX.push_back(x_i);
+	PosY.push_back(y_i);
+	PosZ.push_back(z_i);
+	
+      }
+    }
+  }
+  
+  
+  for(G4int i=0;i<NVoxels;i++){
+    cellLogical[i] = new G4LogicalVolume(Voxel,       // Solid
+					 water,             // Material
+					 "Cell_Logical"); // Name
+    
+    // Voxelized detector. Yellow with transparancy.
+    G4VisAttributes* voxelAttributes = new G4VisAttributes(G4Colour(0.0,0.1,0.8,0.8));
+    voxelAttributes->SetVisibility(true);
+    cellLogical[i]->SetVisAttributes(voxelAttributes);
+    
+    //Position
+    G4cout <<PosX[i]<<"  " <<PosY[i]<<"   "<<PosZ[i]<<G4endl;
+    
+    Voxel_phys =   new G4PVPlacement(0,                               // Rotation matrix pointer
+				     G4ThreeVector(PosX[i],PosY[i],PosZ[i]),    // Translation vector
+				     cellLogical[i],                    // Logical volume
+				     "Voxel_Physical",                // Name
+				     fWorld_logic,                   // Mother volume
+				     false,                            // Unused boolean
+				     i);                               // Copy number
+    // Attach detector to volume defining sensitive cells
+    SetSensitiveDetector(cellLogical[i],MFDet);
+    
+  }
+  fout.close();
+  G4cout << " closed file " << PositionFile<< " for position output" << G4endl;
+}
+
+void DicomDetectorConstruction::PhaseSpace(){
+
+//------------------------------ phase space -----------------------------------------
+
+  G4double PS1box_halfx= 20.0 *cm;
+  G4double PS1box_halfy= 20.0 *cm;
+  G4double PS1box_halfz= 10.0 *um;
+
+  
+  
+  G4Box * PS1_box = new G4Box("PS1_box",PS1box_halfx,PS1box_halfy,PS1box_halfz);
+
+  G4LogicalVolume * PS1_log = new G4LogicalVolume(PS1_box,Vacuum,"PS1_log",0,0,0);
+  
+  G4VPhysicalVolume * PS1_phys;
+
+  PS1_phys = new G4PVPlacement(0,
+		  	  G4ThreeVector(0.0,0.0, -70.0*cm),
+		  	  PS1_log,
+		  	  "PS1_phys",
+		  	  fWorld_logic,
+		  	  true,
+		  	  0);
+  
+  G4cout << "\n *********constructing the phase Space********\n "<<G4endl;
+
+  G4VisAttributes* PS1_logVisAtt = new G4VisAttributes(G4Colour::Red());
+  PS1_logVisAtt->SetVisibility(true);
+  PS1_logVisAtt->SetForceSolid(true);
+  PS1_logVisAtt->SetForceWireframe(true);
+  PS1_log->SetVisAttributes(PS1_logVisAtt);
+  
+  ////////////////////////////////////////////////////////////////////////
+  // Defining sensitive detector
+  // Create a new MultiFunctional Detector
+
+
+/*  Commented out on 05 October 2017
+  G4SDManager* SDman = G4SDManager::GetSDMpointer();
+  //
+  // Sensitive Detector Name
+  G4String concreteSDname = "WaterPhantomTargetSD";
+   G4MultiFunctionalDetector* MFDet =
+     new G4MultiFunctionalDetector(concreteSDname);
+   SDman->AddNewDetector( MFDet);
+   // Assigned to the logical volume
+   PS1_log->SetSensitiveDetector(MFDet);
+
+   G4PSEnergyDeposit* scorer = new G4PSEnergyDeposit("Edep");
+    MFDet->RegisterPrimitive(scorer);
+
+    /*
+   G4VPrimitiveScorer* dosedep =
+     new G4PSDoseDeposit("DoseDeposit");
+   MFDet1->RegisterPrimitive(dosedep);
+    */
+
+
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+

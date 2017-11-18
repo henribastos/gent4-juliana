@@ -1,0 +1,35 @@
+# S. Chauvie
+#
+# Macro file recommended for the use with DICOM example and built-in physic list.
+# This macro uses the physics list already contained in the Geant4 distribution
+# 
+
+#########################
+# Set of the verboses 
+#
+/control/verbose 1
+/tracking/verbose 0
+/run/verbose 1
+/event/verbose 0
+
+
+/random/setDirectoryName .
+/random/setSavingFlag 1
+#/random/resetEngineFrom currentEvent.rndm1
+
+
+##########################
+# Initialisation procedure
+#
+#/geometry/textInput/verbose 3
+
+/run/initialize
+
+/linacCommands/DefineParameters 0 -50 50  output.dat  ELEKTA_PRECISE_6mv_part4 MLC_10x10.dat MLC_10x10.dat
+
+
+#/dicom/intersectWithUserVolume 0. 0. 0. 45.*deg 0. 0. TUBE 0. 150. 100.
+
+/run/beamOn 126491813
+
+#/score/dumpQuantityToFile boxMesh_1 eD 2-15_LdBlock_Dose.txt
